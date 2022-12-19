@@ -1,0 +1,21 @@
+<project name="EDUCATION_DEV" basedir="." default="build">
+    <target name="build" depends="vars, cache, composer, migrations"/>
+    <target name="vars">
+        <php returnProperty="build.time" function="date">
+            <param value="Y-m-d-H-i-s"/>
+        </php>
+        <echo msg="Current time: ${build.time}"/>
+        <resolvepath propertyName="target.dir" file="/srv/app"/>
+        <echo msg="Target dir: ${target.dir}"/>
+    </target>
+    <target name="cache">
+        <exec command="rm -rf var/cache" dir="${target.dir}" passthru="true" checkreturn="true"/>
+    </target>
+    <target name="composer">
+        <exec command="composer install --no-interaction" dir="${target.dir}" passthru="true" checkreturn="true"/>
+    </target>
+    <target name="migrations">
+        <exec command="php bin/console doctrine:migrations:migrate --no-interaction" dir="${target.dir}" passthru="true"
+              checkreturn="true"/>
+    </target>
+</project>
